@@ -1,0 +1,115 @@
+$color-main: #272343;
+$color-secondary: #ffffff;
+$color-main-2: #bae8e8;
+$color-secondary-2: #e3f6f5;
+
+$content-width: 50rem;
+
+$padding: 0.625rem;
+$padding-large: 1.25rem;
+$padding-xlarge: 1.875rem;
+$padding-small: 0.3125rem;
+
+$font-size-base: 1rem;
+$font-size-small: 0.75rem;
+$font-size-large: 1.5rem;
+
+$font-family: "Helvetica Neue", "Arial", sans-serif;
+
+html,body {
+  height: 100%;
+  font-size: $font-size-base;
+}
+
+pre {
+  margin: 0;
+}
+
+code {
+  display: block;
+  white-space: pre-wrap;
+  text-align: left;
+  font-size: $font-size-small;
+}
+
+body {
+  font-family: $font-family;
+  background: $color-main;
+  height: 100%;
+  color: $color-main;
+}
+
+h1,h2,h3,h4,h5 {
+  margin: 0 0 $padding 0;
+}
+
+p {
+  margin: 0 0 $padding-large 0;
+}
+
+hr {
+  margin: $padding-large 0;
+  border-color: $color-main;
+}
+
+
+.button {
+  display: inline-block;
+  border: none;
+  padding: $padding $padding * 1.5;
+  margin: 0 0 $padding-large 0;
+  text-decoration: none;
+  background: $color-main-2;
+  color: $color-main;
+  cursor: pointer;
+  text-align: center;
+  transition: background 250ms ease-in-out, transform 150ms ease;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  &:hover, &:focus {
+    background: darken($color-main-2, 5);
+  }
+
+  &:focus {
+    outline: 1px solid $color-secondary;
+    outline-offset: -4px;
+  }
+
+  &:active {
+    transform: scale(0.99);
+  }
+
+  &--marginless {
+    margin: 0;
+  }
+
+  &--text {
+    background: transparent;
+    padding: $padding-small $padding;
+
+    &:hover,&:focus,&:active {
+      background: transparent;
+      outline: none;
+    }
+  }
+
+  &--large-text {
+    font-size: $font-size-large;
+  }
+}
+
+
+.content {
+  max-width: $content-width;
+  padding: $padding-xlarge $padding;
+  margin: auto;
+  background: $color-secondary;
+
+  &__highlight {
+    padding: $padding;
+    background: $color-secondary-2;
+    text-align: center;
+  }
+}
+

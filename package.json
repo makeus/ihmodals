@@ -1,0 +1,28 @@
+{
+  "name": "ihm",
+  "version": "0.0.1",
+  "main": "dist/ihmodals.js",
+  "author": {
+    "name": "Mathias Keus",
+    "email": "mathias.keus@gmail.com"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.7.5",
+    "@babel/preset-env": "^7.7.6",
+    "babel-jest": "^24.9.0",
+    "babel-plugin-add-module-exports": "^1.0.2",
+    "babelify": "^10.0.0",
+    "browserify": "^16.5.0",
+    "gulp": "^4.0.2",
+    "gulp-jest": "^4.0.3",
+    "gulp-sass": "^4.0.2",
+    "gulp-webserver": "^0.9.1",
+    "jest": "^24.9.0",
+    "jest-cli": "^24.9.0",
+    "jsdoc-to-markdown": "^5.0.3",
+    "node-sass": "^4.13.0",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0"
+  }
+}

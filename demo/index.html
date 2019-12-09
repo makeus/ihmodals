@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>IHModals</title>
+    <link href="demo.css" rel="stylesheet">
+    <link href="../dist/ihm.css" rel="stylesheet">
+</head>
+
+<body>
+
+<section class="content">
+
+    <h1>IHModals</h1>
+
+    <p>Simple, accessible modal service</p>
+
+    <button class="button" onclick="openModal(event)">Demo</button>
+
+    <div class="modal" aria-labelledby="modal-title">
+        <div tabindex="-1" class="modal__close">
+            <button aria-label="Close"
+                    onclick="closeModal()"
+                    class="button button--large-text button--marginless button--text">
+                &#10005;
+            </button>
+        </div>
+        <h2 id="modal-title">Test</h2>
+
+        <p>This is a test modal. </p>
+
+        <button class="button" onclick="closeModal()">Close modal</button>
+    </div>
+
+    <div class="content__highlight">
+        <pre><code>import IHModals from 'ihmodals';
+
+const modal = new IHModals(document.querySelector('.modal'), {closeOnBackgroundClick: true});
+modal.open();</code></pre>
+    </div>
+
+    <hr>
+
+</section>
+
+
+<script src="../dist/ihmodals.js"></script>
+<script>
+    const modal = new IHModals(document.querySelector('.modal'), {closeOnBackgroundClick: true});
+
+    function openModal(event) {
+        event.stopPropagation();
+        modal.open();
+    }
+
+    function closeModal() {
+        modal.close();
+    }
+</script>
+</body>
+
+</html>
