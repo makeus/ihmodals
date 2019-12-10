@@ -2,11 +2,16 @@
   "name": "ihm",
   "version": "0.0.1",
   "main": "dist/ihmodals.js",
+  "description": "Lightweight, accessible modal library",
+  "keywords": ["modal", "vanilla", "lightweight", "tested"],
   "author": {
     "name": "Mathias Keus",
     "email": "mathias.keus@gmail.com"
   },
   "license": "MIT",
+  "scripts": {
+    "test": "gulp test"
+  },
   "devDependencies": {
     "@babel/core": "^7.7.5",
     "@babel/preset-env": "^7.7.6",
