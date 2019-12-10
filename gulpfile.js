@@ -53,7 +53,7 @@ gulp.task('sass', gulp.parallel(['sass:ihm', 'sass:demo']));
 
 gulp.task('docs', () => {
     return jsdoc2md.render({files: 'src/**/*.js'})
-        .then((data) => fs.writeFile('./api.md', data));
+        .then((data) => fs.writeFile('./docs/api.md', data));
 });
 
 gulp.task('watch', () => {
