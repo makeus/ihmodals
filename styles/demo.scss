@@ -5,7 +5,7 @@ $color-secondary-2: #e3f6f5;
 
 $content-width: 50rem;
 
-$padding: 0.625rem;
+$padding: 0.8rem;
 $padding-large: 1.25rem;
 $padding-xlarge: 1.875rem;
 $padding-small: 0.3125rem;
@@ -22,11 +22,10 @@ html,body {
 }
 
 pre {
-  margin: 0;
+  margin: 0 0 $padding 0;
 }
 
 code {
-  display: block;
   white-space: pre-wrap;
   text-align: left;
   font-size: $font-size-small;
@@ -44,14 +43,34 @@ h1,h2,h3,h4,h5 {
 }
 
 p {
-  margin: 0 0 $padding-large 0;
+  margin: 0 0 $padding 0;
 }
 
 hr {
   margin: $padding-large 0;
-  border-color: $color-main;
+  border-color: $color-main-2;
 }
 
+input {
+  width: 100%;
+  margin-bottom: $padding;
+  box-sizing: border-box;
+}
+
+label {
+  display: block;
+  text-align: left;
+  font-weight: bold;
+  font-size: $font-size-small;
+}
+
+a {
+  color: $color-main;
+
+  &:visited {
+    color: $color-main;
+  }
+}
 
 .button {
   display: inline-block;
@@ -110,6 +129,8 @@ hr {
     padding: $padding;
     background: $color-secondary-2;
     text-align: center;
+    outline: 1px solid $color-secondary;
+    outline-offset: - $padding-small;
   }
 }
 

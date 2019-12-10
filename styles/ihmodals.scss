@@ -1,0 +1,39 @@
+$padding: 1.25rem !default;
+$padding-small: 0.3125rem !default;
+$close-font-size: 1.5rem !default;
+
+.modal {
+  backface-visibility: hidden;
+  background: #ffffff;
+  border-radius: 3px;
+  box-shadow: 0 0 0 100vw rgba(0, 0, 0, 0.6);
+  box-sizing: border-box;
+  display: none;
+  left: 0;
+  margin: auto;
+  max-height: calc(100vh - #{2*$padding});
+  max-width: 400px;
+  overflow-y: auto;
+  padding: $padding;
+  position: fixed;
+  right: 0;
+  text-align: center;
+  top: $padding;
+
+  &--open {
+    display: block;
+  }
+
+  &__close {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: $close-font-size;
+    position: absolute;
+    right: $padding-small;
+    top: $padding-small;
+  }
+}
+

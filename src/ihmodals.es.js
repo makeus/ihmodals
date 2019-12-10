@@ -14,7 +14,20 @@ const FOCUSABLE_ELEMENTS = [
     'TEXTAREA',
 ];
 
-const NOOP = () => {};
+const PREVENT_SCROLLING_STYLING = {
+    'overflow': 'hidden',
+    'touch-action': 'none',
+    '-ms-touch-action': 'none',
+};
+
+const RESET_SCROLLING_STYLING = {
+    'overflow': '',
+    'touch-action': '',
+    '-ms-touch-action': '',
+};
+
+const NOOP = () => {
+};
 
 /**
  * Default options
@@ -49,11 +62,34 @@ class IHModals {
          * @private
          */
         this._open = false;
+        /**
+         * @type {Function[]}
+         * @private
+         */
+        this._openEventHandlers = [this._options.onOpenCallback];
+        /**
+         * @type {Function[]}
+         * @private
+         */
+        this._closeEventHandler = [this._options.onCloseCallback];
 
         this._element.setAttribute('aria-modal', 'true');
         if (!this._element.getAttribute('role')) {
             this._element.setAttribute('role', 'dialog');
         }
+
+        /**
+         * @private
+         */
+        this._keyDownEventHandler = this._onKeydown.bind(this);
+        /**
+         * @private
+         */
+        this._clickEventHandler = this._checkOutsideClick.bind(this);
+        /**
+         * @private
+         */
+        this._focusEventHandler = this._onFocus.bind(this);
     }
 
     /**
@@ -62,22 +98,22 @@ class IHModals {
      * @returns {boolean}
      * @private
      */
- /*   _isFocusable(element) {
-        if (element.tabIndex > 0 || (element.tabIndex === 0 && element.getAttribute('tabIndex') !== null)) {
+    _isFocusable(element) {
+        if (element.tabIndex > 0 || (element.tabIndex === 0 && element.getAttribute('tabindex') !== null)) {
             return true;
         }
         if (element.disabled) {
             return false;
         }
         return FOCUSABLE_ELEMENTS.includes(element.nodeName);
-    }*/
+    }
 
     /**
      * @param {KeyboardEvent} event
      * @private
      */
     _onKeydown(event) {
-        if (event.code === 'Escape') {
+        if (event.code === 'Escape' && this._options.closeOnBackgroundClick) {
             this.close();
         }
     }
@@ -93,7 +129,42 @@ class IHModals {
             currentElement = currentElement.parentNode;
         }
         if (currentElement !== this._element) {
-            this.close();
+            if (this._options.closeOnBackgroundClick) {
+                this.close();
+            } else {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+        }
+    }
+
+    /**
+     * @param {HTMLElement} element
+     * @returns {HTMLElement[]}
+     * @private
+     */
+    _getElementFocusableChildren(element) {
+        let children = [];
+        for (let child of element.children) {
+            if(this._isFocusable(child)) {
+                children.push(child);
+            }
+            if (child.children.length) {
+                children = children.concat(this._getElementFocusableChildren(child));
+            }
+        }
+        return children;
+    }
+
+    /**
+     * @param {FocusEvent} event
+     * @private
+     */
+    _onFocus(event) {
+        const children = this._getElementFocusableChildren(this._element);
+        const index = children.indexOf(event.target);
+        if (index === children.length - 1 || index === -1) {
+            children[0].focus();
         }
     }
 
@@ -103,11 +174,17 @@ class IHModals {
     open() {
         this._open = true;
         this._element.classList.add(this._options.className);
-        if (this._options.closeOnBackgroundClick) {
-            document.addEventListener('keydown', this._onKeydown.bind(this));
-            document.addEventListener('click', this._checkOutsideClick.bind(this));
+        document.addEventListener('keydown', this._keyDownEventHandler);
+        document.addEventListener('click', this._clickEventHandler, {capture: true});
+        let children = this._getElementFocusableChildren(this._element);
+        if (children.length) {
+            children[0].focus();
+            document.addEventListener('focusout', this._focusEventHandler, {capture: true});
         }
-        this._options.onOpenCallback();
+        Object.assign(document.body.style, PREVENT_SCROLLING_STYLING);
+        this._openEventHandlers.forEach(cb => {
+            cb()
+        });
     }
 
     /**
@@ -116,9 +193,13 @@ class IHModals {
     close() {
         this._open = false;
         this._element.classList.remove(this._options.className);
-        document.removeEventListener('keydown', this._onKeydown.bind(this));
-        document.removeEventListener('click', this._checkOutsideClick.bind(this));
-        this._options.onCloseCallback();
+        document.removeEventListener('keydown', this._keyDownEventHandler);
+        document.removeEventListener('click', this._clickEventHandler, {capture: true});
+        document.removeEventListener('focusout', this._focusEventHandler, {capture: true});
+        Object.assign(document.body.style, RESET_SCROLLING_STYLING);
+        this._closeEventHandler.forEach(cb => {
+            cb()
+        });
     }
 
     /**
@@ -129,6 +210,75 @@ class IHModals {
         return this._open;
     }
 
+    /**
+     * Helper to remove previously set callbacks.
+     * @param {Function[]} array
+     * @param {Function} callback
+     * @returns {Function[]}
+     * @private
+     */
+    _removeFromArray(array, callback) {
+        const index = array.indexOf(callback);
+        if (index !== -1) {
+            array.splice(index, 1);
+        }
+    }
+
+    /**
+     * Fired when the modal opens
+     * @param {Function} callback
+     */
+    onOpen(callback) {
+        this._openEventHandlers.push(callback);
+    }
+
+    /**
+     * Removes previously bound open callback
+     * @param {Function} callback
+     */
+    offOpen(callback) {
+        this._removeFromArray(this._openEventHandlers, callback);
+    }
+
+    /**
+     * Fired when the modal opens, but only once.
+     * @param callback
+     */
+    onOpenOnce(callback) {
+        const eventHandler = () => {
+            this.offOpen(eventHandler);
+            callback();
+        };
+        this.onOpen(eventHandler);
+    }
+
+    /**
+     * Fired when the modal closes
+     * @param {Function} callback
+     */
+    onClose(callback) {
+        this._closeEventHandler.push(callback);
+    }
+
+    /**
+     * Removes previously bound close callback
+     * @param {Function} callback
+     */
+    offClose(callback) {
+        this._removeFromArray(this._closeEventHandler, callback);
+    }
+
+    /**
+     * Fired when the modal closes, but only once.
+     * @param {Function} callback
+     */
+    onCloseOnce(callback) {
+        const eventHandler = () => {
+            this.offClose(eventHandler);
+            callback();
+        };
+        this.onClose(eventHandler);
+    }
 }
 
 export default IHModals;

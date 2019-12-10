@@ -9,52 +9,138 @@
 
 <body>
 
-<section class="content">
+<div class="content">
 
-    <h1>IHModals</h1>
+    <section>
 
-    <p>Simple, accessible modal service</p>
+        <h1>IHModals</h1>
 
-    <button class="button" onclick="openModal(event)">Demo</button>
+        <p>Simple lightweight, accessible, fully tested modal library.</p>
 
-    <div class="modal" aria-labelledby="modal-title">
-        <div tabindex="-1" class="modal__close">
-            <button aria-label="Close"
-                    onclick="closeModal()"
-                    class="button button--large-text button--marginless button--text">
+        <button class="button button--marginless" onclick="openModal(event)">Demo</button>
+
+        <div class="modal" id="modal" aria-labelledby="modal-title" aria-describedby="modal-description">
+            <h2 id="modal-title">Test</h2>
+
+            <p id="modal-description">This is a test modal. </p>
+
+            <button class="button" onclick="closeModals()">Close modal</button>
+
+            <button class="modal__close" aria-label="Close" onclick="closeModals()">
                 &#10005;
             </button>
         </div>
-        <h2 id="modal-title">Test</h2>
-
-        <p>This is a test modal. </p>
-
-        <button class="button" onclick="closeModal()">Close modal</button>
-    </div>
-
-    <div class="content__highlight">
-        <pre><code>import IHModals from 'ihmodals';
-
-const modal = new IHModals(document.querySelector('.modal'), {closeOnBackgroundClick: true});
-modal.open();</code></pre>
-    </div>
+    </section>
 
     <hr>
 
-</section>
+    <section>
 
+        <h2>Accessibility support</h2>
 
+        <p>
+            This library is in support of of the <a href="https://www.w3.org/TR/wai-aria-practices/#dialog_modal">WAI-ARIA
+            guidelines</a>. Proper attributes are applied and focus is kept inside the modal.
+        </p>
+
+        <button class="button button--marginless" onclick="openInputModal(event)">Examle modal with inputs</button>
+
+        <div class="modal" id="modal2" aria-labelledby="modal2-title" aria-describedby="modal2-description">
+            <h2 id="modal2-title">Test with inputs</h2>
+
+            <p id="modal2-description">
+                This is a test modal including inputs to demonstrate focusing inside. Closing of
+                modal by clicking the background is also prevented.
+            </p>
+
+            <label for="name">Name</label>
+            <input name="name" id="name" type="text">
+
+            <label for="email">Email</label>
+            <input name="name" id="email" type="email">
+
+            <button class="button" onclick="closeModals()">Submit</button>
+        </div>
+
+    </section>
+
+    <hr>
+
+    <section>
+        <h2>Usage</h2>
+        <p>
+            IHModals is designed to give good control to the developer by implementing nothing but the essentials. To
+            get
+            started, create a modal element.
+        </p>
+        <pre><code class="html">&lt;div class=&quot;modal&quot; role=&quot;dialog&quot; aria-modal=&quot;true&quot; aria-labelledby=&quot;title&quot; aria-describedby=&quot;description&quot;&gt;
+    &lt;h2 id=&quot;title&quot;&gt;Test&lt;/h2&gt;
+
+    &lt;p id=&quot;description&quot;&gt;This is a test modal. &lt;/p&gt;
+
+    &lt;button class=&quot;modal__close&quot; aria-label=&quot;Close&quot; onclick=&quot;closeModal()&quot;&gt;
+        &amp;#10005;
+    &lt;/button&gt;
+&lt;/div&gt;</code></pre>
+        <p>The library sets basic attributes (<code>role</code>, <code>aria-modal</code>) required for a accessible
+            modal when missing, but including them yourself and additional properties such as <code>aria-labelledby</code> and
+            <code>aria-describedby</code> pointing to modal title and description is recommended.</p>
+
+        <p>To initialize the modal with javasript</p>
+
+        <pre><code class="javascript">import IHModals from &quot;ihmodals&quot;;
+
+const modal = new IHModals(document.querySelector('.modal'), {closeOnBackgroundClick: true});
+
+function openModal(event) {
+    modal.open();
+    modal.onCloseOnce(() =&gt; {
+        event.target.focus()
+    });
+}</code></pre>
+        <p>It is recommended to return focus to the element that triggered the modal opening.</p>
+
+        <p>Basic styling is <a href="">provided</a> with the library. For more detailed api, check the <a href="">documentation.</a></p>
+
+    </section>
+
+    <hr>
+
+    <section>
+
+        <h2>Documentation</h2>
+
+        <a href="https://github.com">Link to the documentation</a>
+
+        <button></button>
+
+    </section>
+</div>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/solarized-dark.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
 <script src="../dist/ihmodals.js"></script>
 <script>
-    const modal = new IHModals(document.querySelector('.modal'), {closeOnBackgroundClick: true});
+    const modal = new IHModals(document.querySelector('#modal'), {closeOnBackgroundClick: true});
+    const modal2 = new IHModals(document.querySelector('#modal2'), {closeOnBackgroundClick: false});
 
     function openModal(event) {
-        event.stopPropagation();
         modal.open();
+        modal.onCloseOnce(() => {
+            event.target.focus();
+        });
     }
 
-    function closeModal() {
+    function openInputModal(event) {
+        modal2.open();
+        modal2.onCloseOnce(() => {
+            event.target.focus();
+        });
+    }
+
+    function closeModals() {
         modal.close();
+        modal2.close();
     }
 </script>
 </body>

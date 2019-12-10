@@ -38,7 +38,7 @@ gulp.task('webserver', () => {
 });
 
 gulp.task('sass:ihm', () => {
-    return gulp.src('./styles/ihm.scss')
+    return gulp.src('./styles/ihmodals.scss')
         .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
         .pipe(gulp.dest('./dist'));
 });
