@@ -43,13 +43,13 @@ gulp.task('sass:ihm', () => {
         .pipe(gulp.dest('./dist'));
 });
 
-gulp.task('sass:demo', () => {
-    return gulp.src('./styles/demo.scss')
+gulp.task('sass:docs', () => {
+    return gulp.src('./styles/docs.scss')
         .pipe(sass().on('error', sass.logError))
-        .pipe(gulp.dest('./demo'));
+        .pipe(gulp.dest('./docs'));
 });
 
-gulp.task('sass', gulp.parallel(['sass:ihm', 'sass:demo']));
+gulp.task('sass', gulp.parallel(['sass:ihm', 'sass:docs']));
 
 gulp.task('docs', () => {
     return jsdoc2md.render({files: 'src/**/*.js'})
