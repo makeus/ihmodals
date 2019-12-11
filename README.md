@@ -1,4 +1,4 @@
-# IHModals
+# IHModals [![Build Status](https://travis-ci.org/makeus/ihmodals.svg?branch=master)](https://travis-ci.org/makeus/ihmodals)
 
 IHModals is a lightweight, simple, accessible and tested framework for creating modals. The library has no dependencies and provides it's codes unbundled sass and es6 or bundled css and javascript. 
 
