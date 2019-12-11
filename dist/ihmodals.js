@@ -74,6 +74,7 @@ class IHModals {
         this._closeEventHandler = [this._options.onCloseCallback];
 
         this._element.setAttribute('aria-modal', 'true');
+        this._element.setAttribute('aria-hidden', 'true');
         if (!this._element.getAttribute('role')) {
             this._element.setAttribute('role', 'dialog');
         }
@@ -166,13 +167,13 @@ class IHModals {
         return children;
     }
 
-
     /**
      * Opens the modal
      */
     open() {
         this._open = true;
         this._element.classList.add(this._options.className);
+        this._element.setAttribute('aria-hidden', 'false');
         document.addEventListener('keydown', this._keyDownEventHandler, {capture: true});
         document.addEventListener('click', this._clickEventHandler, {capture: true});
         Object.assign(document.body.style, PREVENT_SCROLLING_STYLING);
@@ -191,6 +192,7 @@ class IHModals {
     close() {
         this._open = false;
         this._element.classList.remove(this._options.className);
+        this._element.setAttribute('aria-hidden', 'true');
         document.removeEventListener('keydown', this._keyDownEventHandler, {capture: true});
         document.removeEventListener('click', this._clickEventHandler, {capture: true});
         Object.assign(document.body.style, RESET_SCROLLING_STYLING);

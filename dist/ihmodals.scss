@@ -1,27 +1,41 @@
 $padding: 1.25rem !default;
 $padding-small: 0.3125rem !default;
 $close-font-size: 1.5rem !default;
+$border-radius: 3px !default;
+$background-transparency: 0.6 !default;
+$max-width: 25rem !default;
+$modal-background-color: #ffffff !default;
 
 .modal {
   backface-visibility: hidden;
-  background: #ffffff;
-  border-radius: 3px;
-  box-shadow: 0 0 0 100vw rgba(0, 0, 0, 0.6);
+  background: $modal-background-color;
+  border-radius: $border-radius;
   box-sizing: border-box;
-  display: none;
+  opacity: 0;
+  transform: scale(0.9);
   left: 0;
   margin: auto;
   max-height: calc(100vh - #{2*$padding});
-  max-width: 400px;
+  max-width: $max-width;
   overflow-y: auto;
   padding: $padding;
   position: fixed;
   right: 0;
   text-align: center;
   top: $padding;
+  transition: opacity 0.1s ease-in-out, transform 0.1s ease-in-out;
+
+  @media (min-aspect-ratio: 1/1) {
+    box-shadow: 0 0 0 100vw rgba(0, 0, 0, $background-transparency);
+  }
+  @media (max-aspect-ratio: 1/1) {
+    box-shadow: 0 0 0 100vh rgba(0, 0, 0, $background-transparency);
+  }
 
   &--open {
     display: block;
+    opacity: 1;
+    transform: scale(1);
   }
 
   &__close {

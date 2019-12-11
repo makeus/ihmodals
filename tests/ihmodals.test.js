@@ -19,6 +19,7 @@ describe('IHModals', () => {
             new IHModals(element);
 
             expect(element.hasAttribute('aria-modal')).toEqual(true);
+            expect(element.getAttribute('aria-hidden')).toEqual('true');
             expect(element.getAttribute('role')).toEqual('dialog');
         });
 
@@ -51,6 +52,7 @@ describe('IHModals', () => {
             expect(onOpenCallbacMock).toHaveBeenCalled();
             expect(onOpenCallbacMock2).toHaveBeenCalled();
             expect(element.classList.contains('mymodal--open')).toEqual(true);
+            expect(element.getAttribute('aria-hidden')).toEqual('false');
             expect(modal.isOpen()).toEqual(true);
             expect(document.body.style.overflow).toEqual('hidden');
             expect(document.body.style['touch-action']).toEqual('none');
@@ -428,6 +430,7 @@ describe('IHModals', () => {
             expect(onCloseCallbackMock).toHaveBeenCalled();
             expect(onCloseCallbackMock2).toHaveBeenCalled();
             expect(element.classList.contains('mymodal--open')).toEqual(false);
+            expect(element.getAttribute('aria-hidden')).toEqual('true');
             expect(modal.isOpen()).toEqual(false);
 
         });
