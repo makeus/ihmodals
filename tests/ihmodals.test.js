@@ -95,40 +95,50 @@ describe('IHModals', () => {
             });
         });
 
-        describe('binds focusout event listener', () => {
-            let focusoutEventCallback;
+        describe('binds keydown event handler', () => {
+
+            let keyDownEventCallback;
 
             beforeEach(() => {
                 jest.spyOn(document, 'addEventListener').mockImplementation((eventName, callback) => {
-                    if (eventName === 'focusout') {
-                        focusoutEventCallback = callback;
+                    if (eventName === 'keydown') {
+                        keyDownEventCallback = callback;
                     }
                 });
             });
 
-            it('when focusout:ng on a focusable child element other than the last, does nothing', () => {
-                const element = document.createElement('div');
-                element.insertAdjacentHTML('beforeend', `
-                    <form>
-                        <label for="name">Name</label>
-                        <input id="name" name="name" type="text">
-                        <button type="submit">Submit</button>
-                    </form>
-                `);
+            describe('when fired with escape keycode', () => {
 
-                const modal = new IHModals(element);
-                modal.open();
+                it('and initialized with closeOnBackgroundClick true closes the modal', () => {
+                    const modal = new IHModals(document.createElement('div'), {closeOnBackgroundClick: true});
 
-                expect(document.addEventListener).toHaveBeenCalledWith('focusout', expect.any(Function), {capture: true});
-                expect(document.activeElement === element.querySelector('input')).toEqual(true);
+                    modal.open();
 
-                focusoutEventCallback({target: element.querySelector('input')});
-                expect(document.activeElement === element.querySelector('input')).toEqual(true); // Does not change the focus
+                    expect(document.addEventListener).toHaveBeenCalledWith('keydown', expect.any(Function), {capture: true});
+                    keyDownEventCallback(new KeyboardEvent('keydown', {code: 'Escape'}));
+
+                    expect(modal.isOpen()).toEqual(false);
+                });
+
+                it('and initialized with closeOnBackgroundClick false does nothing', () => {
+                    const modal = new IHModals(document.createElement('div'), {closeOnBackgroundClick: false});
+
+                    modal.open();
+
+                    expect(document.addEventListener).toHaveBeenCalledWith('keydown', expect.any(Function), {capture: true});
+
+                    keyDownEventCallback(new KeyboardEvent('keydown', {code: 'Escape'}));
+
+                    expect(modal.isOpen()).toEqual(true);
+                });
+
             });
 
-            it('when focusout:ng on the last focusable event, focus is returned to the first element', () => {
-                const element = document.createElement('div');
-                element.insertAdjacentHTML('beforeend', `
+
+            describe('when fired with tab keycode', () => {
+                it('current focus is on a element other than the last or the first focusable element, does nothing (default operation)', () => {
+                    const element = document.createElement('div');
+                    element.insertAdjacentHTML('beforeend', `
                     <form>
                         <label for="name">Name</label>
                         <input id="name" name="name" type="text">
@@ -136,16 +146,134 @@ describe('IHModals', () => {
                     </form>
                 `);
 
-                const modal = new IHModals(element);
+                    const modal = new IHModals(element);
+                    modal.open();
+
+                    expect(document.addEventListener).toHaveBeenCalledWith('keydown', expect.any(Function), {capture: true});
+                    expect(document.activeElement === element.querySelector('input')).toEqual(true);
+
+                    keyDownEventCallback(new KeyboardEvent('keydown', {code: 'Tab'}));
+                    expect(document.activeElement === element.querySelector('input')).toEqual(true); // Does not change the focus
+                });
+                it('current focus is on the first element and shift is pressed, focus is shifted to the last child and default tab shifting is prevented', () => {
+                    const element = document.createElement('div');
+                    element.insertAdjacentHTML('beforeend', `
+                    <form>
+                        <label for="name">Name</label>
+                        <input id="name" name="name" type="text">
+                        <label for="email">Email</label>
+                        <input id="email" name="email" type="email">
+                        <button type="submit">Submit</button>
+                    </form>
+                `);
+
+                    const modal = new IHModals(element);
+                    modal.open();
+
+                    expect(document.addEventListener).toHaveBeenCalledWith('keydown', expect.any(Function), {capture: true});
+                    expect(document.activeElement === element.querySelector('input[name="name"]')).toEqual(true);
+
+                    const keyboardEvent = new KeyboardEvent('keydown', {code: 'Tab', shiftKey: true});
+                    jest.spyOn(keyboardEvent, 'preventDefault').mockImplementation();
+                    keyDownEventCallback(keyboardEvent);
+
+                    expect(document.activeElement === element.querySelector('button')).toEqual(true);
+                    expect(keyboardEvent.preventDefault).toHaveBeenCalled();
+                });
+
+                it('current focus is on the first element and shift is not pressed, does nothing (default operation)', () => {
+                    const element = document.createElement('div');
+                    element.insertAdjacentHTML('beforeend', `
+                    <form>
+                        <label for="name">Name</label>
+                        <input id="name" name="name" type="text">
+                        <button type="submit">Submit</button>
+                    </form>
+                `);
+
+                    const modal = new IHModals(element);
+                    modal.open();
+
+                    expect(document.addEventListener).toHaveBeenCalledWith('keydown', expect.any(Function), {capture: true});
+                    expect(document.activeElement === element.querySelector('input')).toEqual(true);
+
+                    const keyboardEvent = new KeyboardEvent('keydown', {code: 'Tab', shiftKey: false});
+                    jest.spyOn(keyboardEvent, 'preventDefault').mockImplementation();
+                    keyDownEventCallback(keyboardEvent);
+
+                    expect(document.activeElement === element.querySelector('input')).toEqual(true);
+                    expect(keyboardEvent.preventDefault).not.toHaveBeenCalled();
+                });
+
+                it('current focus is on the last element, focus is shifted to the first child and default tab shifting is prevented', () => {
+                    const element = document.createElement('div');
+                    element.insertAdjacentHTML('beforeend', `
+                    <form>
+                        <label for="name">Name</label>
+                        <input id="name" name="name" type="text">
+                        <label for="email">Email</label>
+                        <input id="email" name="email" type="email">
+                        <button type="submit">Submit</button>
+                    </form>
+                `);
+
+                    const modal = new IHModals(element);
+                    modal.open();
+
+                    expect(document.addEventListener).toHaveBeenCalledWith('keydown', expect.any(Function), {capture: true});
+
+                    element.querySelector('button').focus();
+
+                    expect(document.activeElement === element.querySelector('button')).toEqual(true);
+
+                    const keyboardEvent = new KeyboardEvent('keydown', {code: 'Tab', shiftKey: false});
+                    jest.spyOn(keyboardEvent, 'preventDefault').mockImplementation();
+                    keyDownEventCallback(keyboardEvent);
+
+                    expect(document.activeElement === element.querySelector('input[name="name"]')).toEqual(true);
+                    expect(keyboardEvent.preventDefault).toHaveBeenCalled();
+                });
+
+                it('current focus is on the last element and shift is pressed, does nothing (default action)', () => {
+                    const element = document.createElement('div');
+                    element.insertAdjacentHTML('beforeend', `
+                    <form>
+                        <label for="name">Name</label>
+                        <input id="name" name="name" type="text">
+                        <label for="email">Email</label>
+                        <input id="email" name="email" type="email">
+                        <button type="submit">Submit</button>
+                    </form>
+                `);
+
+                    const modal = new IHModals(element);
+                    modal.open();
+
+                    expect(document.addEventListener).toHaveBeenCalledWith('keydown', expect.any(Function), {capture: true});
+
+                    element.querySelector('button').focus();
+
+                    expect(document.activeElement === element.querySelector('button')).toEqual(true);
+
+                    const keyboardEvent = new KeyboardEvent('keydown', {code: 'Tab', shiftKey: true});
+                    jest.spyOn(keyboardEvent, 'preventDefault').mockImplementation();
+                    keyDownEventCallback(keyboardEvent);
+
+                    expect(document.activeElement === element.querySelector('button')).toEqual(true);
+                    expect(keyboardEvent.preventDefault).not.toHaveBeenCalled();
+                });
+            });
+
+            it('when fired with other than escape keycode does nothing regardless if closeOnBackgroundClick is true', () => {
+                const modal = new IHModals(document.createElement('div'), {closeOnBackgroundClick: true});
+
                 modal.open();
 
-                expect(document.addEventListener).toHaveBeenCalledWith('focusout', expect.any(Function), {capture: true});
-                element.querySelector('button').focus();
-                expect(document.activeElement === element.querySelector('button')).toEqual(true); // Does not change the focus
+                expect(document.addEventListener).toHaveBeenCalledWith('keydown', expect.any(Function), {capture: true});
 
-                focusoutEventCallback({target: element.querySelector('button')});
+                keyDownEventCallback(new KeyboardEvent('keydown', {code: 'KeyS'}));
 
-                expect(document.activeElement === element.querySelector('input')).toEqual(true); // Does not change the focus
+                expect(modal.isOpen()).toEqual(true);
             });
         });
 
@@ -168,41 +296,6 @@ describe('IHModals', () => {
                     closeOnBackgroundClick: true,
                     onOpenCallback: onOpenCallbackMock,
                     onCloseCallback: onCloseCallbackMock,
-                });
-            });
-
-            describe('binds keydown event handler', () => {
-                let keyDownEventCallback;
-
-                beforeEach(() => {
-                    jest.spyOn(document, 'addEventListener').mockImplementation((eventName, callback) => {
-                        if (eventName === 'keydown') {
-                            keyDownEventCallback = callback;
-                        }
-                    });
-                });
-
-                it('when fired with escape keycode closes the modal', () => {
-                    modal.open();
-
-                    expect(document.addEventListener).toHaveBeenCalledWith('keydown', expect.any(Function));
-                    const keyboardEvent = new KeyboardEvent('keydown', {code: 'Escape'});
-                    keyDownEventCallback(keyboardEvent);
-
-                    expect(modal.isOpen()).toEqual(false);
-                    expect(onCloseCallbackMock).toHaveBeenCalled();
-
-                });
-                it('when fired with other than escape keycode does nothing', () => {
-                    modal.open();
-
-                    expect(document.addEventListener).toHaveBeenCalledWith('keydown', expect.any(Function));
-                    const keyboardEvent = new KeyboardEvent('keydown', {code: 'Tab'});
-                    keyDownEventCallback(keyboardEvent);
-
-                    expect(modal.isOpen()).toEqual(true);
-                    expect(onCloseCallbackMock).not.toHaveBeenCalled();
-
                 });
             });
 
@@ -299,7 +392,11 @@ describe('IHModals', () => {
                     expect(document.addEventListener).toHaveBeenCalledWith('click', expect.any(Function), {capture: true});
                     const preventDefaultMock = jest.fn();
                     const stopPropagationMock = jest.fn();
-                    clickEventCallback({target: button, preventDefault: preventDefaultMock, stopPropagation: stopPropagationMock});
+                    clickEventCallback({
+                        target: button,
+                        preventDefault: preventDefaultMock,
+                        stopPropagation: stopPropagationMock
+                    });
 
                     expect(modal.isOpen()).toEqual(true);
                     expect(onCloseCallbackMock).not.toHaveBeenCalled();
@@ -321,17 +418,12 @@ describe('IHModals', () => {
             const onCloseCallbackMock = jest.fn();
             const onCloseCallbackMock2 = jest.fn();
 
-            const modal = new IHModals(element, {
-                closeOnBackgroundClick: false,
-                className: 'mymodal--open',
-                onCloseCallback: onCloseCallbackMock
-            });
+            const modal = new IHModals(element, {closeOnBackgroundClick: false, className: 'mymodal--open', onCloseCallback: onCloseCallbackMock});
             modal.onClose(onCloseCallbackMock2);
             modal.close();
 
             expect(document.removeEventListener).toHaveBeenCalledWith('click', expect.any(Function), {capture: true});
-            expect(document.removeEventListener).toHaveBeenCalledWith('keydown', expect.any(Function));
-            expect(document.removeEventListener).toHaveBeenCalledWith('focusout', expect.any(Function), {capture: true});
+            expect(document.removeEventListener).toHaveBeenCalledWith('keydown', expect.any(Function), {capture: true});
 
             expect(onCloseCallbackMock).toHaveBeenCalled();
             expect(onCloseCallbackMock2).toHaveBeenCalled();
@@ -343,8 +435,7 @@ describe('IHModals', () => {
 
     describe('#offOpen', () => {
         it('does nothing for a callback not previously set', () => {
-            const element = document.createElement('div');
-            const modal = new IHModals(element);
+            const modal = new IHModals(document.createElement('div'));
             const callbackMock = jest.fn();
             modal.offOpen(callbackMock);
             modal.open();
@@ -352,14 +443,13 @@ describe('IHModals', () => {
         });
 
         it('removes set callback so that it does not fire on subsequent calls', () => {
-            const element = document.createElement('div');
-            const modal = new IHModals(element);
+            const modal = new IHModals(document.createElement('div'));
             const callbackMock = jest.fn();
             modal.onOpen(callbackMock);
             modal.open();
             expect(callbackMock).toHaveBeenCalled();
             callbackMock.mockReset();
-            
+
             modal.offOpen(callbackMock);
             modal.open();
             expect(callbackMock).not.toHaveBeenCalled();
@@ -369,8 +459,7 @@ describe('IHModals', () => {
     describe('#onOpenOnce', () => {
 
         it('fires only on the first open', () => {
-            const element = document.createElement('div');
-            const modal = new IHModals(element);
+            const modal = new IHModals(document.createElement('div'));
 
             const callbackMock = jest.fn();
             modal.onOpenOnce(callbackMock);
@@ -389,8 +478,7 @@ describe('IHModals', () => {
     });
     describe('#offClose', () => {
         it('does nothing for a callback not previously set', () => {
-            const element = document.createElement('div');
-            const modal = new IHModals(element);
+            const modal = new IHModals(document.createElement('div'));
             const callbackMock = jest.fn();
             modal.offClose(callbackMock);
             modal.close();
@@ -398,8 +486,7 @@ describe('IHModals', () => {
         });
 
         it('removes set callback so that it does not fire on subsequent calls', () => {
-            const element = document.createElement('div');
-            const modal = new IHModals(element);
+            const modal = new IHModals(document.createElement('div'));
             const callbackMock = jest.fn();
             modal.onClose(callbackMock);
             modal.close();
@@ -415,8 +502,7 @@ describe('IHModals', () => {
     describe('#onCloseOnce', () => {
 
         it('fires only on the first close', () => {
-            const element = document.createElement('div');
-            const modal = new IHModals(element);
+            const modal = new IHModals(document.createElement('div'));
 
             const callbackMock = jest.fn();
             modal.onCloseOnce(callbackMock);

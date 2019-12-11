@@ -86,10 +86,6 @@ class IHModals {
          * @private
          */
         this._clickEventHandler = this._checkOutsideClick.bind(this);
-        /**
-         * @private
-         */
-        this._focusEventHandler = this._onFocus.bind(this);
     }
 
     /**
@@ -115,6 +111,20 @@ class IHModals {
     _onKeydown(event) {
         if (event.code === 'Escape' && this._options.closeOnBackgroundClick) {
             this.close();
+        }
+
+        if(event.code === 'Tab') {
+            const children = this._getElementFocusableChildren(this._element);
+            const index = children.indexOf(document.activeElement);
+            if (!event.shiftKey && (index === children.length - 1 || index === -1)) {
+                children[0].focus();
+                event.preventDefault();
+                return;
+            }
+            if(event.shiftKey && index === 0) {
+                children[children.length - 1].focus();
+                event.preventDefault();
+            }
         }
     }
 
@@ -156,17 +166,6 @@ class IHModals {
         return children;
     }
 
-    /**
-     * @param {FocusEvent} event
-     * @private
-     */
-    _onFocus(event) {
-        const children = this._getElementFocusableChildren(this._element);
-        const index = children.indexOf(event.target);
-        if (index === children.length - 1 || index === -1) {
-            children[0].focus();
-        }
-    }
 
     /**
      * Opens the modal
@@ -174,14 +173,13 @@ class IHModals {
     open() {
         this._open = true;
         this._element.classList.add(this._options.className);
-        document.addEventListener('keydown', this._keyDownEventHandler);
+        document.addEventListener('keydown', this._keyDownEventHandler, {capture: true});
         document.addEventListener('click', this._clickEventHandler, {capture: true});
-        let children = this._getElementFocusableChildren(this._element);
+        Object.assign(document.body.style, PREVENT_SCROLLING_STYLING);
+        const children = this._getElementFocusableChildren(this._element);
         if (children.length) {
             children[0].focus();
-            document.addEventListener('focusout', this._focusEventHandler, {capture: true});
         }
-        Object.assign(document.body.style, PREVENT_SCROLLING_STYLING);
         this._openEventHandlers.forEach(cb => {
             cb()
         });
@@ -193,9 +191,8 @@ class IHModals {
     close() {
         this._open = false;
         this._element.classList.remove(this._options.className);
-        document.removeEventListener('keydown', this._keyDownEventHandler);
+        document.removeEventListener('keydown', this._keyDownEventHandler, {capture: true});
         document.removeEventListener('click', this._clickEventHandler, {capture: true});
-        document.removeEventListener('focusout', this._focusEventHandler, {capture: true});
         Object.assign(document.body.style, RESET_SCROLLING_STYLING);
         this._closeEventHandler.forEach(cb => {
             cb()
