@@ -124,6 +124,7 @@ a {
   padding: $padding-xlarge $padding;
   margin: auto;
   background: $color-secondary;
+  position: relative;;
 
   &__highlight {
     padding: $padding;
@@ -131,6 +132,12 @@ a {
     text-align: center;
     outline: 1px solid $color-secondary;
     outline-offset: - $padding-small;
+  }
+
+  &__github-link {
+    position: absolute;
+    top: $padding;
+    right: $padding;
   }
 }
 

@@ -6,12 +6,14 @@ sass.compiler = require('node-sass');
 const browserify = require('browserify');
 const buffer = require('vinyl-buffer');
 const source = require('vinyl-source-stream');
+const uglify = require('gulp-uglify');
 const fs = require('fs').promises;
 const jsdoc2md = require('jsdoc-to-markdown');
+const rename = require('gulp-rename');
 
 gulp.task('javascript', function () {
     const b = browserify({
-        entries: ['./src/ihmodals.es.js'],
+        entries: ['./src/ihmodals.js'],
         debug: true,
         standalone: 'IHModals',
         transform: ['babelify']
@@ -20,7 +22,10 @@ gulp.task('javascript', function () {
     return b.bundle()
         .pipe(source('ihmodals.js'))
         .pipe(buffer())
-        .pipe(gulp.dest('./dist'));
+        .pipe(uglify())
+        .pipe(rename({ suffix: '.min' }))
+        .pipe(gulp.dest('./dist'))
+        .pipe(gulp.dest('./docs'))
 });
 
 gulp.task('test', () => {
@@ -40,7 +45,8 @@ gulp.task('webserver', () => {
 gulp.task('sass:ihm', () => {
     return gulp.src('./styles/ihmodals.scss')
         .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
-        .pipe(gulp.dest('./dist'));
+        .pipe(gulp.dest('./dist'))
+        .pipe(gulp.dest('./docs'));
 });
 
 gulp.task('sass:docs', () => {
@@ -56,8 +62,15 @@ gulp.task('docs', () => {
         .then((data) => fs.writeFile('./docs/api.md', data));
 });
 
+gulp.task('copy', () => {
+    return gulp.src(['./src/ihmodals.js', 'styles/ihmodals.scss'])
+        .pipe(gulp.dest('./dist'));
+});
+
 gulp.task('watch', () => {
-    gulp.watch('./src/**/*.es.js', gulp.parallel(['javascript', 'docs']));
+    gulp.watch('./src/**/*.js', gulp.parallel(['javascript', 'docs', 'copy']));
     gulp.watch('./styles/**/*.scss', gulp.series('sass'));
     gulp.watch('./tests/**/*.test.js', gulp.series('test'))
 });
+
+gulp.task('build', gulp.series(['test', gulp.parallel(['copy', 'docs', 'javascript', 'sass'])]));

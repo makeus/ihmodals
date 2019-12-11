@@ -1,4 +1,4 @@
-import IHModals from "../src/ihmodals.es";
+import IHModals from "../src/ihmodals";
 
 describe('IHModals', () => {
 

@@ -77,10 +77,15 @@ a {
   max-width: 50rem;
   padding: 1.875rem 0.8rem;
   margin: auto;
-  background: #ffffff; }
+  background: #ffffff;
+  position: relative; }
   .content__highlight {
     padding: 0.8rem;
     background: #e3f6f5;
     text-align: center;
     outline: 1px solid #ffffff;
     outline-offset: -0.3125rem; }
+  .content__github-link {
+    position: absolute;
+    top: 0.8rem;
+    right: 0.8rem; }

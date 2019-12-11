@@ -3,8 +3,8 @@
 
 <head>
     <title>IHModals</title>
-    <link href="demo.css" rel="stylesheet">
-    <link href="../dist/ihmodals.css" rel="stylesheet">
+    <link href="docs.css" rel="stylesheet">
+    <link href="ihmodals.css" rel="stylesheet">
 </head>
 
 <body>
@@ -16,6 +16,8 @@
         <h1>IHModals</h1>
 
         <p>Simple lightweight, accessible, fully tested modal library.</p>
+
+        <a class="content__github-link" href="https://github.com/makeus/ihmodals">Github</a>
 
         <button class="button button--marginless" onclick="openModal(event)">Demo</button>
 
@@ -39,7 +41,7 @@
         <h2>Accessibility support</h2>
 
         <p>
-            This library is in support of of the <a href="https://www.w3.org/TR/wai-aria-practices/#dialog_modal">WAI-ARIA
+            This library is in support of of the <a href="https://www.w3.org/TR/wai-aria-practices/#dialog_modal" rel="noopener">WAI-ARIA
             guidelines</a>. Proper attributes are applied and focus is kept inside the modal.
         </p>
 
@@ -100,7 +102,7 @@ function openModal(event) {
 }</code></pre>
         <p>It is recommended to return focus to the element that triggered the modal opening.</p>
 
-        <p>Basic styling is <a href="">provided</a> with the library. For more detailed api, check the <a href="">documentation.</a></p>
+        <p>Basic styling is <a href="https://github.com/makeus/ihmodals/blob/master/dist/ihmodals.css">provided</a> with the library. For more detailed api, check the <a href="https://makeus.github.io/ihmodals/api">documentation.</a></p>
 
     </section>
 
@@ -108,18 +110,16 @@ function openModal(event) {
 
     <section>
 
-        <h2>Documentation</h2>
+        <h2>Api</h2>
 
-        <a href="https://github.com">Link to the documentation</a>
-
-        <button></button>
+        <a href="https://makeus.github.io/ihmodals/api">Api</a> provides possible options and methods in the IHModals class.
 
     </section>
 </div>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/solarized-dark.min.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
-<script src="../dist/ihmodals.js"></script>
+<script src="ihmodals.min.js"></script>
 <script>
     const modal = new IHModals(document.querySelector('#modal'), {closeOnBackgroundClick: true});
     const modal2 = new IHModals(document.querySelector('#modal2'), {closeOnBackgroundClick: false});

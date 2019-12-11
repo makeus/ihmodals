@@ -1,16 +1,36 @@
 {
-  "name": "ihm",
-  "version": "0.0.1",
+  "name": "ihmodals",
+  "version": "1.0.0",
   "main": "dist/ihmodals.js",
-  "description": "Lightweight, accessible modal library",
-  "keywords": ["modal", "vanilla", "lightweight", "tested"],
+  "description": "Lightweight, accessible, vanilla modal library",
+  "keywords": [
+    "modal",
+    "vanilla",
+    "lightweight",
+    "tested"
+  ],
+  "homepage": "https://makeus.github.io/ihmodals/",
   "author": {
     "name": "Mathias Keus",
     "email": "mathias.keus@gmail.com"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/makeus/ihmodals.git"
+  },
+  "bugs": {
+    "url": "https://github.com/makeus/ihmodals/issues"
+  },
   "license": "MIT",
+  "browserslist": [
+    "last 2 version"
+  ],
+  "files": [
+    "dist/*"
+  ],
   "scripts": {
-    "test": "gulp test"
+    "test": "gulp test",
+    "build": "gulp build"
   },
   "devDependencies": {
     "@babel/core": "^7.7.5",
@@ -21,12 +41,15 @@
     "browserify": "^16.5.0",
     "gulp": "^4.0.2",
     "gulp-jest": "^4.0.3",
+    "gulp-rename": "^2.0.0",
     "gulp-sass": "^4.0.2",
+    "gulp-uglify": "^3.0.2",
     "gulp-webserver": "^0.9.1",
     "jest": "^24.9.0",
     "jest-cli": "^24.9.0",
     "jsdoc-to-markdown": "^5.0.3",
     "node-sass": "^4.13.0",
+    "uglify": "^0.1.5",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0"
   }
