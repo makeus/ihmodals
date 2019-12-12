@@ -58,6 +58,21 @@ describe('IHModals', () => {
             expect(document.body.style['touch-action']).toEqual('none');
         });
 
+        it('when already open, does not trigger again', () => {
+            const onOpenCallbacMock = jest.fn();
+            const modal = new IHModals(document.createElement('div'), {onOpenCallback: onOpenCallbacMock});
+            modal.open();
+
+            expect(onOpenCallbacMock).toHaveBeenCalled();
+
+            onOpenCallbacMock.mockReset();
+
+            modal.open();
+
+            expect(onOpenCallbacMock).not.toHaveBeenCalled();
+        });
+
+
         const testCases = [
             {
                 html: `<div><label for="input">Test</label><input id="input" type="text"></div>`,
@@ -429,6 +444,7 @@ describe('IHModals', () => {
 
             const modal = new IHModals(element, {closeOnBackgroundClick: false, className: 'mymodal--open', onCloseCallback: onCloseCallbackMock});
             modal.onClose(onCloseCallbackMock2);
+            modal.open();
             modal.close();
 
             expect(document.removeEventListener).toHaveBeenCalledWith('click', expect.any(Function), {capture: true});
@@ -440,6 +456,21 @@ describe('IHModals', () => {
             expect(element.getAttribute('aria-hidden')).toEqual('true');
             expect(modal.isOpen()).toEqual(false);
 
+        });
+
+        it('when already closed, does not trigger again', () => {
+            const onCloseCallbackMock = jest.fn();
+            const modal = new IHModals(document.createElement('div'), {onOpenCallback: onCloseCallbackMock});
+            modal.open();
+            modal.close();
+
+            expect(onCloseCallbackMock).toHaveBeenCalled();
+
+            onCloseCallbackMock.mockReset();
+
+            modal.close();
+
+            expect(onCloseCallbackMock).not.toHaveBeenCalled();
         });
     });
 
@@ -461,6 +492,7 @@ describe('IHModals', () => {
             callbackMock.mockReset();
 
             modal.offOpen(callbackMock);
+            modal.close();
             modal.open();
             expect(callbackMock).not.toHaveBeenCalled();
         });
@@ -480,6 +512,7 @@ describe('IHModals', () => {
 
             callbackMock.mockReset();
 
+            modal.close();
             modal.open();
 
             expect(callbackMock).not.toHaveBeenCalled();
@@ -491,6 +524,7 @@ describe('IHModals', () => {
             const modal = new IHModals(document.createElement('div'));
             const callbackMock = jest.fn();
             modal.offClose(callbackMock);
+            modal.open();
             modal.close();
             expect(callbackMock).not.toHaveBeenCalled();
         });
@@ -499,11 +533,13 @@ describe('IHModals', () => {
             const modal = new IHModals(document.createElement('div'));
             const callbackMock = jest.fn();
             modal.onClose(callbackMock);
+            modal.open();
             modal.close();
             expect(callbackMock).toHaveBeenCalled();
             callbackMock.mockReset();
 
             modal.offClose(callbackMock);
+            modal.open();
             modal.close();
             expect(callbackMock).not.toHaveBeenCalled();
         });
@@ -516,13 +552,13 @@ describe('IHModals', () => {
 
             const callbackMock = jest.fn();
             modal.onCloseOnce(callbackMock);
-
+            modal.open();
             modal.close();
 
             expect(callbackMock).toHaveBeenCalled();
 
             callbackMock.mockReset();
-
+            modal.open();
             modal.close();
 
             expect(callbackMock).not.toHaveBeenCalled();

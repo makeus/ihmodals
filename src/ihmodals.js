@@ -170,6 +170,9 @@ class IHModals {
      * Opens the modal
      */
     open() {
+        if(this._open) {
+            return;
+        }
         this._open = true;
         this._element.classList.add(this._options.className);
         this._element.setAttribute('aria-hidden', 'false');
@@ -189,6 +192,9 @@ class IHModals {
      * Closes the modal
      */
     close() {
+        if(!this._open) {
+            return;
+        }
         this._open = false;
         this._element.classList.remove(this._options.className);
         this._element.setAttribute('aria-hidden', 'true');
