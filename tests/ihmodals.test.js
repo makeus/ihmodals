@@ -326,16 +326,23 @@ describe('IHModals', () => {
                     expect(onCloseCallbackMock).not.toHaveBeenCalled();
                 });
 
-                it('when fired with element outside the modal element closes', () => {
+                it('when fired with element outside the modal element closes and stops propagation', () => {
                     const button = document.createElement('button');
                     document.body.appendChild(button);
                     modal.open();
 
                     expect(document.addEventListener).toHaveBeenCalledWith('click', expect.any(Function), {capture: true});
-                    clickEventCallback({target: button});
-
+                    const preventDefaultMock = jest.fn();
+                    const stopPropagationMock = jest.fn();
+                    clickEventCallback({
+                        target: button,
+                        preventDefault: preventDefaultMock,
+                        stopPropagation: stopPropagationMock
+                    });
                     expect(modal.isOpen()).toEqual(false);
                     expect(onCloseCallbackMock).toHaveBeenCalled();
+                    expect(preventDefaultMock).toHaveBeenCalled();
+                    expect(stopPropagationMock).toHaveBeenCalled();
                 });
             });
         });

@@ -142,10 +142,9 @@ class IHModals {
         if (currentElement !== this._element) {
             if (this._options.closeOnBackgroundClick) {
                 this.close();
-            } else {
-                event.preventDefault();
-                event.stopPropagation();
             }
+            event.preventDefault();
+            event.stopPropagation();
         }
     }
 
