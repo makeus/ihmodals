@@ -5,25 +5,27 @@ $border-radius: 3px !default;
 $background-transparency: 0.6 !default;
 $max-width: 25rem !default;
 $modal-background-color: #ffffff !default;
+$transition-duration: 0.2s;
 
 .modal {
   backface-visibility: hidden;
   background: $modal-background-color;
   border-radius: $border-radius;
   box-sizing: border-box;
-  opacity: 0;
-  transform: scale(0.9);
   left: 0;
   margin: auto;
   max-height: calc(100vh - #{2*$padding});
   max-width: $max-width;
+  opacity: 0;
   overflow-y: auto;
   padding: $padding;
   position: fixed;
   right: 0;
   text-align: center;
   top: $padding;
-  transition: opacity 0.1s ease-in-out, transform 0.1s ease-in-out;
+  transform: scale(0.9);
+  transition: opacity $transition-duration ease-in-out, transform $transition-duration ease-in-out, visibility $transition-duration ease-in-out;
+  visibility: hidden;
 
   @media (min-aspect-ratio: 1/1) {
     box-shadow: 0 0 0 100vw rgba(0, 0, 0, $background-transparency);
@@ -36,6 +38,7 @@ $modal-background-color: #ffffff !default;
     display: block;
     opacity: 1;
     transform: scale(1);
+    visibility: visible;
   }
 
   &__close {
