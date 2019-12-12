@@ -1,6 +1,6 @@
 # IHModals [![Build Status](https://travis-ci.org/makeus/ihmodals.svg?branch=master)](https://travis-ci.org/makeus/ihmodals) [![codecov](https://codecov.io/gh/makeus/ihmodals/branch/master/graph/badge.svg)](https://codecov.io/gh/makeus/ihmodals)
 
-IHModals is a lightweight, simple, accessible and tested framework for creating modals. The library has no dependencies and provides it's codes unbundled sass and es6 or bundled css and javascript. 
+IHModals is a lightweight, simple, accessible and tested framework for creating modals. The library has no dependencies and provides its codes unbundled sass and es6 or as bundled css and javascript. 
 
 ## Demo
 
@@ -23,7 +23,7 @@ or by including the built bundle
 The styling can be included with sass
 
 ```scss
-import "dist/ihmodals.scss".
+@import "dist/ihmodals.scss".
 ```
 The styles can be customized with variables that can be overwritten. Variables can be checked [here](https://github.com/makeus/ihmodals/blob/master/dist/ihmodals.scss).
 
