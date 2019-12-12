@@ -23,7 +23,7 @@ or by including the built bundle
 The styling can be included with sass
 
 ```scss
-@import "dist/ihmodals.scss".
+@import "~ihmodals/dist/ihmodals.scss";
 ```
 The styles can be customized with variables that can be overwritten. Variables can be checked [here](https://github.com/makeus/ihmodals/blob/master/dist/ihmodals.scss).
 

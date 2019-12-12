@@ -52,5 +52,8 @@
     "uglify": "^0.1.5",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0"
+  },
+  "browserify": {
+    "transform": [["babelify", { "presets": ["@babel/preset-env"] }]]
   }
 }
