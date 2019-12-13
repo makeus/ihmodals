@@ -179,13 +179,23 @@ class IHModals {
         document.addEventListener('keydown', this._keyDownEventHandler, {capture: true});
         document.addEventListener('click', this._clickEventHandler, {capture: true});
         Object.assign(document.body.style, PREVENT_SCROLLING_STYLING);
-        const children = this._getElementFocusableChildren(this._element);
-        if (children.length) {
-            children[0].focus();
-        }
+        this._focusFirstChild();
         this._openEventHandlers.forEach(cb => {
             cb()
         });
+    }
+
+    /**
+     * Timetou to prevent issues with click events setting focus on the clicked event.
+     * @private
+     */
+    _focusFirstChild() {
+        setTimeout(() => {
+            const children = this._getElementFocusableChildren(this._element);
+            if (children.length) {
+                children[0].focus();
+            }
+        }, 100);
     }
 
     /**

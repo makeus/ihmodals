@@ -1,5 +1,7 @@
 import IHModals from "../src/ihmodals";
 
+jest.useFakeTimers();
+
 describe('IHModals', () => {
 
     beforeEach(() => {
@@ -9,6 +11,10 @@ describe('IHModals', () => {
         document.removeEventListener.mockReset();
 
         document.body.style = new CSSStyleDeclaration();
+    });
+
+    afterEach(() => {
+        jest.runAllTimers();
     });
 
     describe('initialization', () => {
@@ -48,6 +54,7 @@ describe('IHModals', () => {
             });
             modal.onOpen(onOpenCallbacMock2);
             modal.open();
+            jest.runAllTimers();
 
             expect(onOpenCallbacMock).toHaveBeenCalled();
             expect(onOpenCallbacMock2).toHaveBeenCalled();
@@ -62,6 +69,7 @@ describe('IHModals', () => {
             const onOpenCallbacMock = jest.fn();
             const modal = new IHModals(document.createElement('div'), {onOpenCallback: onOpenCallbacMock});
             modal.open();
+            jest.runAllTimers();
 
             expect(onOpenCallbacMock).toHaveBeenCalled();
 
@@ -107,6 +115,7 @@ describe('IHModals', () => {
 
                 const modal = new IHModals(element);
                 modal.open();
+                jest.runAllTimers();
 
                 expect(document.activeElement === element.querySelector(expectedFocusOnSelector)).toEqual(true);
             });
@@ -165,6 +174,7 @@ describe('IHModals', () => {
 
                     const modal = new IHModals(element);
                     modal.open();
+                    jest.runAllTimers();
 
                     expect(document.addEventListener).toHaveBeenCalledWith('keydown', expect.any(Function), {capture: true});
                     expect(document.activeElement === element.querySelector('input')).toEqual(true);
@@ -186,6 +196,7 @@ describe('IHModals', () => {
 
                     const modal = new IHModals(element);
                     modal.open();
+                    jest.runAllTimers();
 
                     expect(document.addEventListener).toHaveBeenCalledWith('keydown', expect.any(Function), {capture: true});
                     expect(document.activeElement === element.querySelector('input[name="name"]')).toEqual(true);
@@ -210,6 +221,7 @@ describe('IHModals', () => {
 
                     const modal = new IHModals(element);
                     modal.open();
+                    jest.runAllTimers();
 
                     expect(document.addEventListener).toHaveBeenCalledWith('keydown', expect.any(Function), {capture: true});
                     expect(document.activeElement === element.querySelector('input')).toEqual(true);
@@ -236,6 +248,7 @@ describe('IHModals', () => {
 
                     const modal = new IHModals(element);
                     modal.open();
+                    jest.runAllTimers();
 
                     expect(document.addEventListener).toHaveBeenCalledWith('keydown', expect.any(Function), {capture: true});
 
@@ -265,6 +278,7 @@ describe('IHModals', () => {
 
                     const modal = new IHModals(element);
                     modal.open();
+                    jest.runAllTimers();
 
                     expect(document.addEventListener).toHaveBeenCalledWith('keydown', expect.any(Function), {capture: true});
 
