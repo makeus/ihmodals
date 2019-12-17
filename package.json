@@ -1,6 +1,6 @@
 {
   "name": "ihmodals",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "main": "dist/ihmodals.js",
   "description": "Lightweight, accessible, vanilla modal library",
   "keywords": [
