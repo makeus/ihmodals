@@ -54,6 +54,10 @@ describe('IHModals', () => {
             });
             modal.onOpen(onOpenCallbacMock2);
             modal.open();
+
+            expect(element.style.display).toEqual('block');
+            expect(element.classList.contains('mymodal--open')).toEqual(false);
+
             jest.runAllTimers();
 
             expect(onOpenCallbacMock).toHaveBeenCalled();
@@ -447,11 +451,15 @@ describe('IHModals', () => {
 
     describe('#close', () => {
         it('removes open class, removes document event handlers and calls all bound callback', () => {
-            jest.spyOn(document, 'removeEventListener').mockImplementation();
-
             const element = document.createElement('div');
             element.classList.add('mymodal');
-            element.classList.add('mymodal--open');
+
+            let transitionEndCallback;
+            jest.spyOn(element, 'addEventListener').mockImplementation((eventName, callback) => {
+                if(eventName === 'transitionend') {
+                    transitionEndCallback = callback;
+                }
+            });
 
             const onCloseCallbackMock = jest.fn();
             const onCloseCallbackMock2 = jest.fn();
@@ -466,10 +474,17 @@ describe('IHModals', () => {
 
             expect(onCloseCallbackMock).toHaveBeenCalled();
             expect(onCloseCallbackMock2).toHaveBeenCalled();
-            expect(element.classList.contains('mymodal--open')).toEqual(false);
             expect(element.getAttribute('aria-hidden')).toEqual('true');
             expect(modal.isOpen()).toEqual(false);
 
+            /**
+             * Handles open classname removal
+             */
+            expect(element.classList.contains('mymodal--open')).toEqual(false);
+            expect(element.style.display).toEqual('block');
+            expect(element.addEventListener).toHaveBeenCalledWith('transitionend', expect.any(Function), {once: true});
+            transitionEndCallback();
+            expect(element.style.display).toEqual('');
         });
 
         it('when already closed, does not trigger again', () => {

@@ -174,7 +174,7 @@ class IHModals {
             return;
         }
         this._open = true;
-        this._element.classList.add(this._options.className);
+        this._setOpenClass();
         this._element.setAttribute('aria-hidden', 'false');
         document.addEventListener('keydown', this._keyDownEventHandler, {capture: true});
         document.addEventListener('click', this._clickEventHandler, {capture: true});
@@ -183,6 +183,31 @@ class IHModals {
         this._openEventHandlers.forEach(cb => {
             cb()
         });
+    }
+
+    /**
+     * Sets open class by first setting display as block. This allows for animations and transitions to fire.
+     * SetTimeout is required to trigger drawing of the element before adding the open classname triggering the animation.
+     * @private
+     */
+    _setOpenClass() {
+        this._element.style.setProperty('display', 'block');
+        setTimeout(() => {
+            this._element.style.removeProperty('display');
+            this._element.classList.add(this._options.className);
+        });
+    }
+
+    /**
+     * Removes open class and leaves display as block for the duration of the transition.
+     * @private
+     */
+    _removeOpenClass() {
+        this._element.style.setProperty('display', 'block');
+        this._element.classList.remove(this._options.className);
+        this._element.addEventListener('transitionend', () => {
+            this._element.style.removeProperty('display');
+        }, {once: true});
     }
 
     /**
@@ -206,7 +231,7 @@ class IHModals {
             return;
         }
         this._open = false;
-        this._element.classList.remove(this._options.className);
+        this._removeOpenClass();
         this._element.setAttribute('aria-hidden', 'true');
         document.removeEventListener('keydown', this._keyDownEventHandler, {capture: true});
         document.removeEventListener('click', this._clickEventHandler, {capture: true});
