@@ -1,4 +1,4 @@
-# IHModals [![Build Status](https://travis-ci.org/makeus/ihmodals.svg?branch=master)](https://travis-ci.org/makeus/ihmodals) [![codecov](https://codecov.io/gh/makeus/ihmodals/branch/master/graph/badge.svg)](https://codecov.io/gh/makeus/ihmodals) [![dependencies Status](https://david-dm.org/makeus/ihmodals/status.svg)](https://david-dm.org/makeus/ihmodals)
+# IHModals [![Build Status](https://travis-ci.org/makeus/ihmodals.svg?branch=master)](https://travis-ci.org/makeus/ihmodals) [![codecov](https://codecov.io/gh/makeus/ihmodals/branch/master/graph/badge.svg)](https://codecov.io/gh/makeus/ihmodals) [![dependencies Status](https://david-dm.org/makeus/ihmodals/status.svg)](https://david-dm.org/makeus/ihmodals) ![size](https://img.shields.io/badge/gzip%20size-2.01%20kB-44cc11.svg)
 
 IHModals is a lightweight, simple, accessible and tested framework for creating modals. The library has no dependencies and provides its codes unbundled sass and es6 or as bundled css and javascript. 
 
