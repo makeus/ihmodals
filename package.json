@@ -29,8 +29,8 @@
     "dist/*"
   ],
   "scripts": {
-    "test": "gulp test",
-    "build": "gulp build"
+    "test": "node_modules/gulp-cli/bin/gulp.js test",
+    "build": "node_modules/gulp-cli/bin/gulp.js build"
   },
   "devDependencies": {
     "@babel/core": "^7.7.5",
