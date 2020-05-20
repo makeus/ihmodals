@@ -2,6 +2,7 @@
  * @typedef {Object} options
  * @property {string} [className] Classname added to the modal when opened. Defaults to `modal--open`
  * @property {boolean} [closeOnBackgroundClick] Enable closing the modal when clicking outside the modal. Defaults to true.
+ * @property {boolean} [disableBackgroundListening] Disabled listening of any background clicks. Used in special cases where you dont wan't the modal service interfering with the background.
  * @property {Function} [onOpenCallback]
  * @property {Function} [onCloseCallback]
  */
@@ -37,6 +38,7 @@ const NOOP = () => {
 const DEFAULT_OPTIONS = {
     className: 'modal--open',
     closeOnBackgroundClick: true,
+    disableBackgroundListening: false,
     onOpenCallback: NOOP,
     onCloseCallback: NOOP,
 };
@@ -177,7 +179,9 @@ class IHModals {
         this._setOpenClass();
         this._element.setAttribute('aria-hidden', 'false');
         document.addEventListener('keydown', this._keyDownEventHandler, {capture: true});
-        document.addEventListener('click', this._clickEventHandler, {capture: true});
+        if (!this._options.disableBackgroundListening) {
+            document.addEventListener('click', this._clickEventHandler, {capture: true});
+        }
         Object.assign(document.body.style, PREVENT_SCROLLING_STYLING);
         this._focusFirstChild();
         this._openEventHandlers.forEach(cb => {

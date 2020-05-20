@@ -447,6 +447,25 @@ describe('IHModals', () => {
                 });
             });
         });
+
+        describe('with disableBackgroundListening', () => {
+
+            it('does not bind click handler', () => {
+                jest.spyOn(document, 'addEventListener');
+
+                const element = document.createElement('div');
+                const modal = new IHModals(element, {
+                    disableBackgroundListening: true
+                });
+
+                const child = document.createElement('button');
+                element.appendChild(child);
+
+                modal.open();
+
+                expect(document.addEventListener).not.toHaveBeenCalledWith('click', expect.any(Function), {capture: true});
+            });
+        })
     });
 
     describe('#close', () => {

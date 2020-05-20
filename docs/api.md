@@ -132,6 +132,7 @@ Fired when the modal closes, but only once.
 | --- | --- | --- |
 | [className] | <code>string</code> | Classname added to the modal when opened. Defaults to `modal--open` |
 | [closeOnBackgroundClick] | <code>boolean</code> | Enable closing the modal when clicking outside the modal. Defaults to true. |
+| [disableBackgroundListening] | <code>boolean</code> | Disabled listening of any background clicks. Used in special cases where you dont wan't the modal service interfering with the background. |
 | [onOpenCallback] | <code>function</code> |  |
 | [onCloseCallback] | <code>function</code> |  |
 
